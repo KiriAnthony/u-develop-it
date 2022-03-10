@@ -30,12 +30,38 @@ const db = mysql.createConnection(
 //     });
 // }); // run by npm start after adding start:node server.js to package.json
 
+// create a candidate
+const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected)
+            VALUES (?,?,?,?)`;
+const params = [1, 'Ronald', 'Firbank', 1];
 
+db.query(sql, params, (err, result) => {
+    if(err) {
+        console.log(err);
+    }
+    console.log(result);
+});
+
+// delete a candidate
+// db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
+//     if(err) {
+//         console.log(err);
+//     }
+//     console.log(result);
+// });
+
+// GET a single candidate
+// db.query(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+//     if(err) {
+//         console.log(err);
+//     }
+//     console.log(row);
+// });
 
 // returns all data in candidates table
-db.query(`SELECT * FROM candidates`, (err, rows) => {
-    console.log(rows);
-});
+// db.query(`SELECT * FROM candidates`, (err, rows) => {
+//     console.log(rows);
+// });
 
 // default response for any other request (Not Found)
 // this route overrides all others (Keep as last)
