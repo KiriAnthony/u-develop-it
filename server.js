@@ -92,7 +92,12 @@ app.post('/api/candidate', ({body}, res) => {
 // GET a single candidate
 app.get('/api/candidate/:id', (req, res) => {
     // creating a var to select a single candidate
-    const sql = `SELECT * FROM candidates WHERE id = ?`;
+    const sql = `SELECT candidates.*, parties.name
+                AS party_name
+                FROM candidates
+                LEFT JOIN parties
+                ON CANDIDATES.party_id = parties.id
+                WHERE id = ?`;
     // accepting user input on which candidate to pull
     const params = [req.params.id];
     db.query(sql, params, (err, row) => {
@@ -112,7 +117,11 @@ app.get('/api/candidate/:id', (req, res) => {
 // Get all candidates
 app.get('/api/candidates', (req, res) => {
     // creates variable to return all data in candidates table
-    const sql = `SELECT * FROM candidates`;
+    const sql = `SELECT candidates.*, parties.name
+                AS party_name
+                FROM candidates
+                LEFT JOIN parties
+                ON CANDIDATES.party_id = parties.id`;
 
     db.query(sql, (err, rows) => {
         // handle error
