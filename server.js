@@ -137,6 +137,93 @@ app.get('/api/candidates', (req, res) => {
     });
 });
 
+// get all parties
+app.get('/api/parties', (req, res) => {
+    // create var to select all parties
+    const sql = `SELECT * FROM parties`;
+    db.query(sql, (err, rows) => {
+        // handle error
+        if(err) {
+            res.status(500).json({error: err.message});
+            return;
+        }
+        // display message and data
+        res.json({
+            message: 'success',
+            data: rows
+        });
+    });
+});
+
+// get single party
+app.get('/api/parties/:id', (req, res) => {
+    const sql = `SELECT * FROM parties WHERE id = ?`;
+    const params = [req.params.id];
+    db.query(sql, params, (err, row) => {
+        if(err) {
+            res.status(400).json({error: err.message});
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: row
+        });
+    });
+});
+
+// delete a single party and set value to null in related tables
+app.delete('/api/party/:id', (req, res) => {
+    const sql = `DELETE FROM parties WHERE id = ?`;
+    const params = [req.params.id];
+    db.query(sql, params, (err, result) => {
+        if(err) {
+            res.status(400).json({error: res.message});
+            // check if anything deleted
+        } else if (!result.affectedRows) {
+            res.json({
+                message: 'Party not found'
+            });
+        } else {
+            res.json({
+                message: 'deleted',
+                changes: result.affectedRows,
+                id: req.params.id
+            });
+        }
+    });
+});
+
+// Update a candidate's party
+app.put('/api/candidate/:id', (req, res) => {
+    // validating user input
+    const errors = inputCheck(req.body, 'party_id');
+    if (errors) {
+    res.status(400).json({ error: errors });
+    return;
+    }
+
+    // updating the party
+    const sql = `UPDATE candidates SET party_id = ? 
+                 WHERE id = ?`;
+    const params = [req.body.party_id, req.params.id];
+    db.query(sql, params, (err, result) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        // check if a record was found
+      } else if (!result.affectedRows) {
+        res.json({
+          message: 'Candidate not found'
+        });
+      } else {
+        res.json({
+          message: 'success',
+          data: req.body,
+          changes: result.affectedRows
+        });
+      }
+    });
+  });
+
 // default response for any other request (Not Found)
 // this route overrides all others (Keep as last)
 app.use((req, res) => {
