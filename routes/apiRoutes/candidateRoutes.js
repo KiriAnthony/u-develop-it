@@ -105,7 +105,7 @@ router.get('/candidates', (req, res) => {
 });
 
 // Update a candidate's party
-app.put('/api/candidate/:id', (req, res) => {
+router.put('/candidate/:id', (req, res) => {
     // validating user input
     const errors = inputCheck(req.body, 'party_id');
     if (errors) {
