@@ -1,17 +1,16 @@
 // inport db from connection.js
 const db = require('./db/connection');
 
-const apiRoutes = require('./routes/apiRoutes');
-
-// input function to check input for post request
-const inputCheck = require('./utils/inputCheck');
-
 // create the express connection
 const express = require('express');
 const res = require('express/lib/response');
 const { run } = require('jest');
 const PORT = process.env.PORT || 3001;
 const app = express();
+// input function to check input for post request
+const inputCheck = require('./utils/inputCheck');
+
+const apiRoutes = require('./routes/apiRoutes');
 
 // add express middleware
 app.use(express.urlencoded({extended: false}));
